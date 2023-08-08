@@ -4,7 +4,7 @@ using Rainmeter;
 
 namespace RMPlugin
 {
-    public class RMLog
+    public static class RMLog
     {
         public static API Api { private get; set; }
 

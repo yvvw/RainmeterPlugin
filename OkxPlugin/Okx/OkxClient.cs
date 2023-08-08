@@ -1,6 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using ApiSharp.Models;
 using OKX.Api;
 using OKX.Api.Authentication;
+using OKX.Api.Models.MarketData;
 using OKX.Api.Models.TradingAccount;
 using RMPlugin;
 
@@ -12,26 +18,28 @@ namespace OkxPlugin.Okx
 
         public OkxClient(string accessKey, string secretKey, string passphrase)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12;
             client = new OKXRestApiClient(new OKXRestApiClientOptions
             {
-                RawResponse = true,
                 ApiCredentials = new OkxApiCredentials(accessKey, secretKey, passphrase)
             });
         }
 
-        public async Task<OkxAccountBalance> GetAccountBalanceAsync()
+        public async Task<IEnumerable<OkxTicker>> GetSpotMarketTickersAsync() =>
+            ExtractResult(await client.OrderBookTrading.MarketData.GetTickersAsync(
+                OKX.Api.Enums.OkxInstrumentType.Spot));
+
+        public async Task<OkxAccountBalance> GetAccountBalanceAsync() =>
+            ExtractResult(await client.TradingAccount.GetAccountBalanceAsync());
+
+        public async Task<IEnumerable<OkxPosition>> GetAccountPositionsAsync() =>
+            ExtractResult(await client.TradingAccount.GetAccountPositionsAsync());
+
+        private T ExtractResult<T>(RestCallResult<T> result)
         {
-            var result = await client.TradingAccount.GetAccountBalanceAsync();
-            RMLog.NoticeF("raw {0}", result.Raw);
-            if (result.GetResultOrError(out var balance, out var error))
-            {
-                return balance;
-            }
-            else
-            {
-                RMLog.ErrorF("GetAccountBalance failed {0}", error);
-                return null;
-            }
+            if (result.GetResultOrError(out T data, out var error)) return data;
+            RMLog.ErrorF("failed {0}", error);
+            return default;
         }
     }
 }
