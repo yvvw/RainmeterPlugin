@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
 using ApiSharp.Models;
 using OKX.Api;
 using OKX.Api.Authentication;
 using OKX.Api.Models.MarketData;
 using OKX.Api.Models.TradingAccount;
+
 using RMPlugin;
 
-namespace OkxPlugin.Okx
+namespace Okx
 {
     public class OkxClient
     {
@@ -26,16 +27,19 @@ namespace OkxPlugin.Okx
         }
 
         public async Task<IEnumerable<OkxTicker>> GetSpotMarketTickersAsync() =>
-            ExtractResult(await client.OrderBookTrading.MarketData.GetTickersAsync(
-                OKX.Api.Enums.OkxInstrumentType.Spot));
+            (await client.OrderBookTrading.MarketData.GetTickersAsync(OKX.Api.Enums.OkxInstrumentType.Spot)).GetResult();
 
         public async Task<OkxAccountBalance> GetAccountBalanceAsync() =>
-            ExtractResult(await client.TradingAccount.GetAccountBalanceAsync());
+            (await client.TradingAccount.GetAccountBalanceAsync()).GetResult();
 
         public async Task<IEnumerable<OkxPosition>> GetAccountPositionsAsync() =>
-            ExtractResult(await client.TradingAccount.GetAccountPositionsAsync());
+            (await client.TradingAccount.GetAccountPositionsAsync()).GetResult();
+    }
 
-        private T ExtractResult<T>(RestCallResult<T> result)
+    public static class RestCallResultExtensions
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetResult<T>(this RestCallResult<T> result)
         {
             if (result.GetResultOrError(out T data, out var error)) return data;
             RMLog.ErrorF("failed {0}", error);

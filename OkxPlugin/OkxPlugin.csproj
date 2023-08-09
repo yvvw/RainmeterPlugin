@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="$(SolutionDir)API\RainmeterAPI.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="OkxMeasure.cs" />
     <Compile Include="OkxPlugin.cs" />
     <Compile Include="Okx\OkxClient.cs" />
     <Compile Include="RMPlugin\RMLog.cs" />
