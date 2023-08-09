@@ -94,7 +94,7 @@ namespace OkxPlugin
             {
                 string side = position.PositionSide.ToString();
                 string lastPrice = position.UnrealizedProfitAndLoss?.ToUSDString();
-                string percent = position.UnrealizedProfitAndLossRatio?.ToUSDString();
+                string percent = position.UnrealizedProfitAndLossRatio?.ToPercentString();
                 return $"{side} {lastPrice} {percent}";
             }
             return null;
@@ -117,6 +117,7 @@ namespace OkxPlugin
             if (!m_Disposed)
             {
                 foreach (var it in m_Cache) Marshal.FreeHGlobal(it.Value);
+                m_Cache.Clear();
                 m_Disposed = true;
             }
         }

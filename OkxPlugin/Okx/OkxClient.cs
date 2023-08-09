@@ -36,7 +36,7 @@ namespace Okx
             (await client.TradingAccount.GetAccountPositionsAsync()).GetResult();
     }
 
-    public static class RestCallResultExtensions
+    internal static class RestCallResultExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetResult<T>(this RestCallResult<T> result)
