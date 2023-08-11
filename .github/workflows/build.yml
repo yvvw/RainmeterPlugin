@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2019
     permissions:
       contents: write
 
@@ -14,8 +14,6 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: microsoft/setup-msbuild@v1.1
-        with:
-          msbuild-architecture: x64
 
       - uses: actions/setup-dotnet@v3
         with:
