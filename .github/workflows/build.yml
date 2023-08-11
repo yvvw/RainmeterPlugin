@@ -16,8 +16,6 @@ jobs:
       - uses: microsoft/setup-msbuild@v1.1
 
       - uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '4.7.1'
 
       - run: msbuild -m -t:Restore -p:Configuration=Release -p:Platform="Any CPU"
 
