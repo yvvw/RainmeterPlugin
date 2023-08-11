@@ -13,13 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 5.x
+      - uses: microsoft/setup-msbuild@v1.1
 
-      - run: dotnet restore --locked-mode
+      - run: msbuild /t:restore
 
-      - run: dotnet build --configuration Release --no-restore
+      - run: msbuild /t:build RainmeterPlugin.sln /p:Configuration=Release /p:Platform="Any CPU"
 
       - uses: softprops/action-gh-release@v1
         with:
