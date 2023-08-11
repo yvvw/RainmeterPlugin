@@ -13,11 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: microsoft/setup-msbuild@v1.1
+      - uses: actions/setup-dotnet@v3
         with:
-          msbuild-architecture: x64
+          dotnet-version: 7.x
+          cache: true
 
-      - run: msbuild RainmeterPlugin.sln -t:rebuild /p:Platform="Any CPU" /p:Configuration=Release
+      - run: dotnet restore
+
+      - run: dotnet build --configuration Release --no-restore
 
       - uses: softprops/action-gh-release@v1
         with:
