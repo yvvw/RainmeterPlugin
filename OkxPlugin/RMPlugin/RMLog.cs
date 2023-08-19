@@ -24,6 +24,9 @@ namespace RMPlugin
         public static void Error(string message) => Log(API.LogType.Error, message);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void Log(API.LogType type, string format, params Object[] args) => Api?.LogF(type, format, args);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void DebugF(string format, params Object[] args) => Log(API.LogType.Debug, format, args);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -34,8 +37,5 @@ namespace RMPlugin
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ErrorF(string format, params Object[] args) => Log(API.LogType.Error, format, args);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void Log(API.LogType type, string format, params Object[] args) => Api?.LogF(type, format, args);
     }
 }
