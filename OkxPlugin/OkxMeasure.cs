@@ -133,7 +133,7 @@ namespace OkxPlugin
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToUSDString(this decimal value, string format = "#,##0.00") =>
-            value.ToString(format);
+            value.ToString(value > 0.005m ? format : $"0.0(e+0)");
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToPercentString(this decimal value, string format = "#,##0.00%") =>
