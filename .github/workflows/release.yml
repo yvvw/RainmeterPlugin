@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  release:
+    runs-on: windows-2019
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+
+      - name: MSBuild Restore
+        run: msbuild -m -t:Restore -p:Configuration=Release -p:Platform="Any CPU"
+
+      - name: MSBuild Build
+        run: msbuild -m -t:Build -p:Configuration=Release -p:Platform="Any CPU"
+
+      - name: Compress
+        run: Compress-Archive -Path OkxPlugin/x64/Release/OkxPlugin.dll -Destination OkxPlugin.dll.zip
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: latest
+          tag_name: latest
+          files: OkxPlugin.dll.zip
